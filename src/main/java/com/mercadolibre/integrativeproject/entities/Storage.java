@@ -33,7 +33,7 @@ public class Storage {
     @JsonBackReference
     @Column
     @OneToMany
-    private List<Sector>  sectorsList ;
+    private List<Sector> sectorsList ;
 
 }
 

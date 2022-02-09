@@ -47,7 +47,7 @@ public class SectorService implements ISectorService<Sector, Long> {
      *
      * @return Setor
      *
-     * @throws NotFoundException
+     * @throws NotFoundException - Storage não encontrado
      *
      * */
     @Override
@@ -73,7 +73,7 @@ public class SectorService implements ISectorService<Sector, Long> {
      *
      * @return Setor que tenha o sectorId informado
      *
-     * @throws NotFoundException
+     * @throws NotFoundException - Sector não encontrado.
      *
      * */
     @Override
@@ -218,7 +218,7 @@ public class SectorService implements ISectorService<Sector, Long> {
      *
      * @author Jefferson Froes , Arthur Amorim
      * @param  productId - id do produto a ser buscado.
-     * @return retorna o total de todos os produtos em estque.
+     * @return retorna o total de todos os produtos em estoque.
      *
      * */
     public List<AmountProductPerStorage> getAmountProductPerStorage(Long productId){
