@@ -1,11 +1,20 @@
 package com.mercadolibre.integrativeproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+
+/** Entidade ExpiredBatchRepository
+ *
+ * @author Jefferson Froes
+ *
+ **/
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,13 +27,15 @@ public class ExpiredBatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     @OneToMany
-    private List<Batch> batchListExpired;
+    @JsonBackReference
+    private List<Batch> expiredBatchList = new ArrayList<>();
 
     @ManyToOne
     private Sector sector;
 
-    @Column
-    private Timestamp data;
-
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Timestamp date;
 }
