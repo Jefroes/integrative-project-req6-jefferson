@@ -9,7 +9,7 @@ import java.util.List;
  * */
 public interface IExpiredBatchService<T, ID> {
 
-    List<T> getByIdSectorAllBatchesExpired(ID id);
+    //List<T> getByIdSectorAllBatchesExpired(ID id);
 
-    List<T> getAll();
+    //List<T> getAll();
 }

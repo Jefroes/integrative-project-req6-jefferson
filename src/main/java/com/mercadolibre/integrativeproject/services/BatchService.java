@@ -170,7 +170,7 @@ public class BatchService implements ICrudServiceInterface<Batch, Long>, BathSer
      * @return Lista de lotes que estão com a data de expiração dentro do range de dias informados
      *
      * */
-    private List<Batch> filterBacthsByDueDate(Integer numberOfDays, List<Batch> batches) {
+    protected List<Batch> filterBacthsByDueDate(Integer numberOfDays, List<Batch> batches) {
         Date date = new Date();
         Timestamp now = new Timestamp(date.getTime());
         Timestamp expiredDate = Timestamp.valueOf(now.toLocalDateTime().plusDays(numberOfDays));

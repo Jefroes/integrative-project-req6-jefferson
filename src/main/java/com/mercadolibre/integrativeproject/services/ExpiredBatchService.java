@@ -3,6 +3,7 @@ package com.mercadolibre.integrativeproject.services;
 import com.mercadolibre.integrativeproject.entities.Batch;
 import com.mercadolibre.integrativeproject.entities.ExpiredBatch;
 import com.mercadolibre.integrativeproject.entities.Sector;
+import com.mercadolibre.integrativeproject.enums.BatchStatus;
 import com.mercadolibre.integrativeproject.repositories.BatchRepository;
 import com.mercadolibre.integrativeproject.repositories.ExpiredBatchRepository;
 import com.mercadolibre.integrativeproject.repositories.SectorRepository;
@@ -10,6 +11,7 @@ import com.mercadolibre.integrativeproject.services.interfaces.IExpiredBatchServ
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpiredBatchService implements IExpiredBatchService<Batch, Long> {
@@ -33,23 +35,31 @@ public class ExpiredBatchService implements IExpiredBatchService<Batch, Long> {
         this.expiredBatchRepository = expiredBatchRepository;
     }
 
-
-    public ExpiredBatch create(Long sectorId, List<Batch> expiredBatchList) {
-        Sector sector = sectorRepository.getById(sectorId);
-        ExpiredBatch expiredBatch = new ExpiredBatch();
-        expiredBatch.getSector().setId(sectorId);
-        expiredBatch.setExpiredBatchList(expiredBatchList);
-        return expiredBatchRepository.save(expiredBatch);
+    public ExpiredBatch create(Long sectorId, List<Batch> batchesList) {
+        List<Batch> batchListFiltered = batchService.filterBacthsByDueDate(5, batchesList);
+        Sector sector = sectorService.getById(sectorId);
+        List<Batch> allBatchesExpired = batchListFiltered.stream().map(batch -> {
+            Batch batchById = batchService.getById(batch.getId());
+            batchById.setStatus(BatchStatus.EXPIRED);
+            return batchById;
+        }).collect(Collectors.toList());
+        batchRepository.saveAll(allBatchesExpired);
+        ExpiredBatch expiredBatches = ExpiredBatch.builder().sector(sector).expiredBatchList(allBatchesExpired).build();
+        return expiredBatchRepository.save(expiredBatches);
     }
 
-    @Override
+    //@Override
     public List<Batch> getByIdSectorAllBatchesExpired(Long sectorId) {
-        Sector sector = sectorRepository.getById(sectorId);
-        return batchService.getBatchesByDueDate(5, sector.getResponsible().getId());
+        return batchService.getBatchesByDueDate(5, sectorId);
     }
 
-    @Override
-    public List<Batch> getAll() {
-        return batchRepository.findAll();
+
+    public List<ExpiredBatch> findExpiredBatchBySectorId(Long sectorId) {
+        return expiredBatchRepository.findExpiredBatchBySectorId(sectorId);
+    }
+
+    //@Override
+    public List<ExpiredBatch> getAll() {
+        return expiredBatchRepository.findAll();
     }
 }

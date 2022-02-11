@@ -1,6 +1,9 @@
 package com.mercadolibre.integrativeproject.entities;
 
 
+import com.mercadolibre.integrativeproject.enums.BatchStatus;
+import lombok.Builder;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -12,6 +15,7 @@ import java.sql.Timestamp;
  * @author Arthur Amorim
  *
  * */
+
 @Entity
 public class Batch {
 
@@ -38,11 +42,23 @@ public class Batch {
     @NotNull
     private Timestamp expirationDate;
     @NotNull
-        private Timestamp fabricationDate;
+    private Timestamp fabricationDate;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private BatchStatus status = BatchStatus.NOT_EXPIRED;
 
     private BigDecimal pricePerUnit;
 
     public Batch() {
+    }
+
+    public BatchStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BatchStatus status) {
+        this.status = status;
     }
 
     public Long getBatchNumber() {
